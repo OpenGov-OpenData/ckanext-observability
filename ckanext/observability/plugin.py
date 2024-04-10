@@ -9,13 +9,16 @@ from opentelemetry.sdk.metrics import MeterProvider
 from opentelemetry.instrumentation.flask import FlaskInstrumentor
 from opentelemetry.sdk.resources import SERVICE_NAME, Resource
 
+import logging
+log = logging.getLogger(__name__)
+
 def setup_opentelemetry():
     resource = Resource(attributes={
-        SERVICE_NAME: "ckan-opengov"
+        SERVICE_NAME: "ckan"
     })
     # Start Prometheus client
     start_http_server(port=9464)
-    print('Starting HTTP WebServer on port 9464...')
+    log.debug('Starting HTTP WebServer on port 9464...')
     # Initialize PrometheusMetricReader which pulls metrics from the SDK
     # on-demand to respond to scrape requests
     reader = PrometheusMetricReader()

@@ -21,7 +21,7 @@ To install ckanext-observablity:
 
 2. Clone the source and install it on the virtualenv
 
-    git clone https://github.com/scastineyras/ckanext-observablity.git
+    git clone https://github.com/OpenGov-OpenData/ckanext-observability.git
     cd ckanext-observablity
     pip install -e .
 	pip install -r requirements.txt
@@ -50,8 +50,7 @@ None at present
 
 To install ckanext-observablity for development, activate your CKAN virtualenv and
 do:
-
-    git clone https://github.com/scastineyras/ckanext-observablity.git
+    git clone https://github.com/OpenGov-OpenData/ckanext-observability.git
     cd ckanext-observablity
     python setup.py develop
     pip install -r dev-requirements.txt
