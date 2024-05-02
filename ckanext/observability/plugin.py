@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 import ckan.plugins as p
 
-from prometheus_client import start_http_server
-
 from opentelemetry import metrics
-from opentelemetry.exporter.prometheus import PrometheusMetricReader
+from opentelemetry.exporter.otlp.proto.grpc.metric_exporter import OTLPMetricExporter
 from opentelemetry.sdk.metrics import MeterProvider
-from opentelemetry.instrumentation.flask import FlaskInstrumentor
+from opentelemetry.sdk.metrics.export import PeriodicExportingMetricReader
 from opentelemetry.sdk.resources import SERVICE_NAME, Resource
+from opentelemetry.instrumentation.flask import FlaskInstrumentor
 
 import logging
 log = logging.getLogger(__name__)
@@ -16,12 +15,9 @@ def setup_opentelemetry():
     resource = Resource(attributes={
         SERVICE_NAME: "ckan"
     })
-    # Start Prometheus client
-    start_http_server(port=9464)
-    log.debug('Starting HTTP WebServer on port 9464...')
-    # Initialize PrometheusMetricReader which pulls metrics from the SDK
-    # on-demand to respond to scrape requests
-    reader = PrometheusMetricReader()
+    reader = PeriodicExportingMetricReader(
+        OTLPMetricExporter(endpoint="http://grafana-agent-traces.monitoring.svc.cluster.local:4317", insecure=True)
+    )
     provider = MeterProvider(resource=resource, metric_readers=[reader])
     metrics.set_meter_provider(provider)
 
